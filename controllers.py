@@ -1,9 +1,24 @@
+"""
+process for cancellation
+if the button down is in the queue or l/r is in the queue, do not send again.
+wait for a clearing signal, then send again.
+
+
+opposite of mnD is mnU
+opposite of mnL or mnR is mnC
+
+if mnD is in SENT, do not send again until sending mnU
+if mnL is in SENT, do not send again until sending mnC
+if mnR is in SENT, do not send again until sending mnC
+"""
+
 import queue
 import inputs
 from threading import Thread, Lock
 import events
 import socket, select
 import sys
+import time
 
 mutex = Lock()
 
@@ -27,31 +42,54 @@ already_sent_up_down = {
     3 : False
 }
 
+sent = set()
+
+def shouldBeSent(s):
+    if s[2] in ["R", "L"]:
+        if s in sent:
+            return False
+        else:
+            sent.add(s)
+            s_inverse = s[0:2] + "C"
+            sent.discard(s_inverse)
+            return True
+    elif s[2] in ["C"]:
+        if s in sent:
+            return False
+        else:
+            sent.add(s)
+            s_inverse1 = s[0:2] + "L"
+            s_inverse2 = s[0:2] + "R"
+            sent.discard(s_inverse1)
+            sent.discard(s_inverse2)
+            return True
+    elif s[2] in ["D"]:
+        if s in sent:
+            return False
+        else:
+            sent.add(s)
+            s_inverse = s[0:2] + "U"
+            sent.discard(s_inverse)
+            return True
+    elif s[2] in ["U"]:
+        if s in sent:
+            return False
+        else:
+            sent.add(s)
+            s_inverse = s[0:2] + "D"
+            sent.discard(s_inverse)
+            return True
+    else:
+        print("ERROR! Unexpected key to press! : " + s )
+        return False;
 
 def send_data(device_id, device):
     for elem in device:
         for event in elem:
             key = (device_id, event.code, event.state)
             if key in events.EVENTS.keys():
-                if event.state != 127 and  event.code == "ABS_X" and already_sent_left_right[device_id]:
-                    continue
-                elif event.state != 127 and  event.code == "ABS_X" and not already_sent_left_right[device_id]:
-                    continue
-                    already_sent_left_right[device_id] = True
-                elif event.state == 127 and  event.code == "ABS_X"  and already_sent_left_right[device_id]:
-                    continue
-                    already_sent_left_right[device_id] = False
-                elif event.state == 127 and event.code == "ABS_X" and not already_sent_left_right[device_id]:
-                    continue
-                elif event.state != 127 and  event.code == "ABS_Y" and already_sent_up_down[device_id]:
-                    continue
-                elif event.state != 127 and  event.code == "ABS_Y" and not already_sent_up_down[device_id]:
-                    continue
-                    already_sent_up_down[device_id] = True
-                elif event.state == 127 and  event.code == "ABS_Y"  and already_sent_up_down[device_id]:
-                    continue
-                    already_sent_up_down[device_id] = False
-                elif event.state == 127 and event.code == "ABS_Y" and not already_sent_up_down[device_id]:
+                strToSend = events.EVENTS[key]
+                if not shouldBeSent(strToSend):
                     continue
                 while 1:
                     if not mutex.locked():
@@ -60,12 +98,13 @@ def send_data(device_id, device):
                     else:
                         time.sleep(0.005)
                 try:
-                    q.put(events.EVENTS[key].encode('utf-8'))
+                    q.put(strToSend.encode('utf-8'))
                 except Exception as e:
                     print(str(e))
                     print("unable to send" + events.EVENTS[key]) 
                 finally:
                     mutex.release()
+                time.sleep(0.01)
 
 def process_queue():
     while 1:
