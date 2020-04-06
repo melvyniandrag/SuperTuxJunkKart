@@ -62,17 +62,19 @@ last_turns = {
 }
 
 def transform_data_to_keypress (sock, message):
+	message = message.decode('utf-8')
 	button = message[0:2]
 	action = message[2]
+	print(button)
 	if button in axes and action != "C":
-		pyautogui.keyDown(BUTTON_MAP[message[0:3])
+		pyautogui.keyDown(BUTTON_MAP[message[0:3]])
 		last_turns[button[0]] == BUTTON_MAP[message[0:3]]
-	else if button in axes and action == "C":
+	elif button in axes and action == "C":
 		pyautogui.keyUp(last_turns[button[0]])
 	else:
 		if action == "U":
 			pyautogui.keyUp(BUTTON_MAP[button])
-		else if action == "D":
+		elif action == "D":
 			pyautogui.keyDown(BUTTON_MAP[button])
 		else:
 			print("error!")	
@@ -93,7 +95,6 @@ if __name__ == "__main__":
 	# Add server socket to the list of readable connections
 	CONNECTION_LIST.append(server_socket)
 
-	print "Chat server started on port " + str(PORT)
 
 	while 1:
 		# Get the list sockets which are ready to be read through select
@@ -105,7 +106,7 @@ if __name__ == "__main__":
 				# Handle the case in which there is a new connection recieved through server_socket
 				sockfd, addr = server_socket.accept()
 				CONNECTION_LIST.append(sockfd)
-				print "Client (%s, %s) connected" % addr
+				print("Client (%s, %s) connected" % addr)
 			
 			#Some incoming message from a client
 			else:
@@ -118,7 +119,7 @@ if __name__ == "__main__":
 						transform_data_to_keypress(sock, data)                
 				
 				except:
-					print "Client (%s, %s) is offline" % addr
+					print("Client (%s, %s) is offline" % addr)
 					sock.close()
 					CONNECTION_LIST.remove(sock)
 					continue
