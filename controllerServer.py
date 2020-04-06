@@ -13,7 +13,7 @@ BUTTON_MAP = {
 	"0E": "7",
 	"0F": "8",
 	"0XR": "9",
-	"0YD": "0",
+	"0YU": "0",
 
 	"1XL": "q", 
 	"1YD": "w",
@@ -65,11 +65,14 @@ def transform_data_to_keypress (sock, message):
 	message = message.decode('utf-8')
 	button = message[0:2]
 	action = message[2]
-	print(button)
+	print(message[0:3])
 	if button in axes and action != "C":
 		pyautogui.keyDown(BUTTON_MAP[message[0:3]])
-		last_turns[button[0]] == BUTTON_MAP[message[0:3]]
+		last_turns[button[0]] = BUTTON_MAP[message[0:3]]
 	elif button in axes and action == "C":
+		print(last_turns)
+		print(button[0])
+		print(last_turns[button[0]])
 		pyautogui.keyUp(last_turns[button[0]])
 	else:
 		if action == "U":
@@ -108,15 +111,14 @@ if __name__ == "__main__":
 				CONNECTION_LIST.append(sockfd)
 				print("Client (%s, %s) connected" % addr)
 			
-			#Some incoming message from a client
 			else:
-				# Data recieved from client, process it
 				try:
-					#In Windows, sometimes when a TCP program closes abruptly,
-					# a "Connection reset by peer" exception will be thrown
 					data = sock.recv(RECV_BUFFER)
 					if data:
-						transform_data_to_keypress(sock, data)                
+						try:
+							transform_data_to_keypress(sock, data)                
+						except Exception as e:
+							print("Error in transform")
 				
 				except:
 					print("Client (%s, %s) is offline" % addr)
