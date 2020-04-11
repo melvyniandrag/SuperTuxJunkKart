@@ -28,20 +28,6 @@ s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
 s.settimeout(20)
 
-already_sent_left_right = {
-    0 : False,
-    1 : False,
-    2 : False,
-    3 : False
-}
-
-already_sent_up_down = {
-    0 : False,
-    1 : False,
-    2 : False,
-    3 : False
-}
-
 sent = set()
 
 def shouldBeSent(s):
@@ -53,31 +39,29 @@ def shouldBeSent(s):
             s_inverse = s[0:2] + "C"
             sent.discard(s_inverse)
             return True
+    elif s[2] in ["u", "d"]:
+        if s in sent:
+            return False
+        else:
+            sent.add(s)
+            s_inverse = s[0:2] + "C"
+            sent.discard(s_inverse)
+            return True
+    elif s[2] in ["U", "D"]:
+        return True
     elif s[2] in ["C"]:
         if s in sent:
             return False
         else:
             sent.add(s)
-            s_inverse1 = s[0:2] + "L"
-            s_inverse2 = s[0:2] + "R"
+            s_inverse1 = s[0:2] + "u"
+            s_inverse2 = s[0:2] + "d"
+            s_inverse3 = s[0:2] + "R"
+            s_inverse4 = s[0:2] + "L"
             sent.discard(s_inverse1)
             sent.discard(s_inverse2)
-            return True
-    elif s[2] in ["D"]:
-        if s in sent:
-            return False
-        else:
-            sent.add(s)
-            s_inverse = s[0:2] + "U"
-            sent.discard(s_inverse)
-            return True
-    elif s[2] in ["U"]:
-        if s in sent:
-            return False
-        else:
-            sent.add(s)
-            s_inverse = s[0:2] + "D"
-            sent.discard(s_inverse)
+            sent.discard(s_inverse3)
+            sent.discard(s_inverse4)
             return True
     else:
         print("ERROR! Unexpected key to press! : " + s )

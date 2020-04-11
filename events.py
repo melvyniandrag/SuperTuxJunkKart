@@ -3,9 +3,9 @@ EVENTS = {
         (0, "ABS_X", 0)  : "0XR", # x right
         (0, "ABS_X", 127): "0XC", # x center
         (0, "ABS_X", 255): "0XL", # x left
-        (0, "ABS_Y", 0)  : "0YD", # y down
+        (0, "ABS_Y", 0)  : "0Yd", # y down
         (0, "ABS_Y", 127): "0YC", # y center
-        (0, "ABS_Y", 255): "0YU", # y right
+        (0, "ABS_Y", 255): "0Yu", # y right
         (0, "BTN_TOP", 0):     "0AU", # A up
         (0, "BTN_TOP", 1):     "0AD", # A downa
         (0, "BTN_TRIGGER", 0): "0BU", # A up
@@ -22,9 +22,9 @@ EVENTS = {
         (1, "ABS_X", 0)  : "1XR", # x right
         (1, "ABS_X", 127): "1XC", # x center
         (1, "ABS_X", 255): "1XL", # x left
-        (1, "ABS_Y", 0)  : "1YD", # y down
+        (1, "ABS_Y", 0)  : "1Yd", # y down
         (1, "ABS_Y", 127): "1YC", # y center
-        (1, "ABS_Y", 255): "1YU", # y right
+        (1, "ABS_Y", 255): "1Yu", # y right
         (1, "BTN_TOP", 0):     "1AU", # A up
         (1, "BTN_TOP", 1):     "1AD", # A downa
         (1, "BTN_TRIGGER", 0): "1BU", # A up
@@ -41,9 +41,9 @@ EVENTS = {
         (2, "ABS_X", 0)  : "2XR", # x right
         (2, "ABS_X", 127): "2XC", # x center
         (2, "ABS_X", 255): "2XL", # x left
-        (2, "ABS_Y", 0)  : "2YD", # y down
+        (2, "ABS_Y", 0)  : "2Yd", # y down
         (2, "ABS_Y", 127): "2YC", # y center
-        (2, "ABS_Y", 255): "2YU", # y right
+        (2, "ABS_Y", 255): "2Yu", # y right
         (2, "BTN_TOP", 0):     "2AU", # A up
         (2, "BTN_TOP", 1):     "2AD", # A downa
         (2, "BTN_TRIGGER", 0): "2BU", # A up
@@ -60,9 +60,9 @@ EVENTS = {
         (3, "ABS_X", 0)  : "3XR", # x right
         (3, "ABS_X", 127): "3XC", # x center
         (3, "ABS_X", 255): "3XL", # x left
-        (3, "ABS_Y", 0)  : "3YD", # y down
+        (3, "ABS_Y", 0)  : "3Yd", # y down
         (3, "ABS_Y", 127): "3YC", # y center
-        (3, "ABS_Y", 255): "3YU", # y right
+        (3, "ABS_Y", 255): "3Yu", # y right
         (3, "BTN_TOP", 0):     "3AU", # A up
         (3, "BTN_TOP", 1):     "3AD", # A downa
         (3, "BTN_TRIGGER", 0): "3BU", # A up
